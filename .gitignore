@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+.npm/
+
+# Build output
+dist/
+gen/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+
+# OS/IDE files
+.DS_Store
+.vscode/
+.idea/
+
+# Env/credentials
+.env
+.env.local
+
+# Proto build artifacts
+protos/*.pb.ts
+protos/*.js

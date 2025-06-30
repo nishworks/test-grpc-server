@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package weather;
+
+enum Granularity {
+  HOURLY = 0;
+  DAILY = 1;
+}
+
+enum WeatherVariable {
+  TEMPERATURE = 0;
+  HUMIDITY = 1;
+}
+
+message WeatherRequest {
+  string country_code = 1;
+  string state_name = 2;
+  string city_name = 3;
+  string start_time = 4;
+  string end_time = 5;
+  Granularity granularity = 6;
+  repeated WeatherVariable variables = 7;
+}
+
+message DataPoint {
+  string timestamp = 1;
+  double value = 2;
+  string variable = 3;
+}
+
+message WeatherResponse {
+  repeated DataPoint data = 1;
+}
+
+message Empty {}
+
+message Country {
+  string code = 1;
+  string name = 2;
+}
+message State {
+  string name = 1;
+}
+message City {
+  string name = 1;
+  double lat = 2;
+  double lon = 3;
+}
+
+message CountryList {
+  repeated Country countries = 1;
+}
+message StateList {
+  repeated State states = 1;
+}
+message CityList {
+  repeated City cities = 1;
+}
+
+message CountryRequest {
+  string country_code = 1;
+}
+message StateRequest {
+  string country_code = 1;
+  string state_name = 2;
+}
+
+service WeatherService {
+  rpc GetWeather (WeatherRequest) returns (WeatherResponse);
+}
+
+service LocationCatalogService {
+  rpc ListCountries (Empty) returns (CountryList);
+  rpc ListStates (CountryRequest) returns (StateList);
+  rpc ListCities (StateRequest) returns (CityList);
+}

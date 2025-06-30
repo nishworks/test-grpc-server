@@ -1,0 +1,23 @@
+{
+  "name": "grpc-weather-server",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "gen": "protoc --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./gen --ts_proto_opt=outputServices=grpc-js,useOptionals=all -I ./protos protos/weather.proto",
+    "test-client": "ts-node test-client.ts"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.8.14",
+    "@grpc/proto-loader": "^0.7.7",
+    "axios": "^1.7.0",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "ts-node": "^10.9.2",
+    "ts-proto": "^1.181.2",
+    "typescript": "^5.4.5"
+  }
+}

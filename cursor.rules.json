@@ -1,0 +1,14 @@
+{
+  "project": "grpc-weather-server",
+  "entry": "src/server.ts",
+  "proto": "protos/weather.proto",
+  "codegen": {
+    "command": "npm run gen",
+    "watch": ["protos/weather.proto"],
+    "generates": ["gen/"]
+  },
+  "commands": {
+    "dev": "ts-node src/server.ts",
+    "gen": "protoc --plugin=protoc-gen-ts_proto=$(npx --no-install which protoc-gen-ts_proto) --ts_proto_out=./gen --ts_proto_opt=outputServices=grpc-js,useOptionals=all -I ./protos protos/weather.proto"
+  }
+}
