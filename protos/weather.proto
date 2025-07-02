@@ -40,6 +40,8 @@ message Country {
 }
 message State {
   string name = 1;
+  string code = 2;
+
 }
 message City {
   string name = 1;

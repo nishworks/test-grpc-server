@@ -5,16 +5,10 @@ import { getCityCoordinates } from '../geonames';
 export const getWeatherHandler: WeatherServiceServer['getWeather'] = async (call, callback) => {
   try {
     // Access fields using snake_case names from protobuf
-    const countryCode = (call.request as any).country_code;
-    const stateName = (call.request as any).state_name;
-    const cityName = (call.request as any).city_name;
-    const startTime = (call.request as any).start_time;
-    const endTime = (call.request as any).end_time;
-    const granularity = call.request.granularity;
-    const variables = call.request.variables;
+    const { country_code, state_name, city_name, start_time, end_time, granularity, variables } = call.request;
 
     // Add null checks for required fields
-    if (!countryCode || !stateName || !cityName || !startTime || !endTime || !granularity || !variables) {
+    if (!country_code || !state_name || !city_name || !start_time || !end_time || !granularity || !variables) {
       callback(new Error('Missing required fields'), null);
       return;
     }
@@ -25,7 +19,7 @@ export const getWeatherHandler: WeatherServiceServer['getWeather'] = async (call
       return;
     }
 
-    const { lat, lon } = await getCityCoordinates(countryCode, stateName, cityName);
+    const { lat, lon } = await getCityCoordinates(country_code, state_name, city_name);
     const granularityStr = granularityToJSON(granularity);
     const isHourly = granularityStr === 'HOURLY';
     const varNames: Record<string, string> = {
@@ -55,8 +49,8 @@ export const getWeatherHandler: WeatherServiceServer['getWeather'] = async (call
         latitude: lat,
         longitude: lon,
         [query]: variableList,
-        start_date: startTime.split('T')[0],
-        end_date: endTime.split('T')[0],
+        start_date: start_time.split('T')[0],
+        end_date: end_time.split('T')[0],
         timezone: 'UTC'
       }
     };

@@ -29,10 +29,11 @@ export const listCountriesHandler: LocationCatalogServiceServer['listCountries']
 
 export const listStatesHandler: LocationCatalogServiceServer['listStates'] = async (call: grpc.ServerUnaryCall<CountryRequest, any>, callback: grpc.sendUnaryData<any>) => {
   try {
+    
     const request = {
       url: 'http://api.geonames.org/searchJSON',
       params: {
-        country: call.request.countryCode,
+        country: call.request.country_code,
         featureCode: 'ADM1',
         maxRows: 1000,
         username: GEONAMES_USERNAME
@@ -43,7 +44,8 @@ export const listStatesHandler: LocationCatalogServiceServer['listStates'] = asy
 
     const res = await axios.get(request.url, { params: request.params });
 
-    const states = res.data.geonames.map((s: any) => ({ name: s.name }));
+    const states = res.data.geonames.map((s: any) => ({ name: s.name, code: s.adminCode1 }));
+    console.log("States:", states);
     callback(null, { states });
   } catch (e) {
     console.error('GeoNames API error:', e);
@@ -53,11 +55,12 @@ export const listStatesHandler: LocationCatalogServiceServer['listStates'] = asy
 
 export const listCitiesHandler: LocationCatalogServiceServer['listCities'] = async (call: grpc.ServerUnaryCall<StateRequest, any>, callback: grpc.sendUnaryData<any>) => {
   try {
+    
     const request = {
       url: 'http://api.geonames.org/searchJSON',
       params: {
-        country: call.request.countryCode,
-        adminName1: call.request.stateName,
+        country: call.request.country_code,
+        adminCode1: call.request.state_name,
         featureClass: 'P',
         maxRows: 1000,
         username: GEONAMES_USERNAME
