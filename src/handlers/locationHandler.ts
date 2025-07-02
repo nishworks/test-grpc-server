@@ -45,7 +45,6 @@ export const listStatesHandler: LocationCatalogServiceServer['listStates'] = asy
     const res = await axios.get(request.url, { params: request.params });
 
     const states = res.data.geonames.map((s: any) => ({ name: s.name, code: s.adminCode1 }));
-    console.log("States:", states);
     callback(null, { states });
   } catch (e) {
     console.error('GeoNames API error:', e);

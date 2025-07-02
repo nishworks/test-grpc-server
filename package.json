@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node src/server.ts",
+    "dev": "npm run gen && ts-node src/server.ts",
     "build": "tsc",
     "gen": "protoc --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./gen --ts_proto_opt=outputServices=grpc-js,useOptionals=all,snakeToCamel=false,stringEnums=true -I ./protos protos/weather.proto",
     "test-client": "ts-node test-client.ts"
