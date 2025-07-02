@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as grpc from '@grpc/grpc-js';
 
 const GEONAMES_USERNAME = 'nishgarg14'; // replace this
-const USE_MOCK_DATA = true; // Set to false to use GeoNames API
+const USE_MOCK_DATA = false; // Set to false to use GeoNames API
 
 // Mock data for testing when API fails
 const mockCountries = [
@@ -31,9 +31,14 @@ export const listCountriesHandler: LocationCatalogServiceServer['listCountries']
   }
 
   try {
-    const res = await axios.get('http://api.geonames.org/countryInfoJSON', {
+    const request = {
+      url: 'http://api.geonames.org/countryInfoJSON',
       params: { username: GEONAMES_USERNAME }
-    });
+    };
+
+    console.log("Fetching from:", axios.getUri(request));
+
+    const res = await axios.get(request.url, { params: request.params });
 
     const countries = res.data.geonames.map((c: any) => ({
       code: c.countryCode,
@@ -54,14 +59,19 @@ export const listStatesHandler: LocationCatalogServiceServer['listStates'] = asy
   }
 
   try {
-    const res = await axios.get('http://api.geonames.org/searchJSON', {
+    const request = {
+      url: 'http://api.geonames.org/searchJSON',
       params: {
         country: call.request.countryCode,
         featureCode: 'ADM1',
         maxRows: 1000,
         username: GEONAMES_USERNAME
       }
-    });
+    };
+
+    console.log("Fetching from:", axios.getUri(request));
+
+    const res = await axios.get(request.url, { params: request.params });
 
     const states = res.data.geonames.map((s: any) => ({ name: s.name }));
     callback(null, { states });
@@ -78,7 +88,8 @@ export const listCitiesHandler: LocationCatalogServiceServer['listCities'] = asy
   }
 
   try {
-    const res = await axios.get('http://api.geonames.org/searchJSON', {
+    const request = {
+      url: 'http://api.geonames.org/searchJSON',
       params: {
         country: call.request.countryCode,
         adminName1: call.request.stateName,
@@ -86,7 +97,11 @@ export const listCitiesHandler: LocationCatalogServiceServer['listCities'] = asy
         maxRows: 1000,
         username: GEONAMES_USERNAME
       }
-    });
+    };
+
+    console.log("Fetching from:", axios.getUri(request));
+
+    const res = await axios.get(request.url, { params: request.params });
 
     const cities = res.data.geonames.map((c: any) => ({
       name: c.name,

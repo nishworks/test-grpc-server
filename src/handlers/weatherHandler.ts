@@ -49,7 +49,8 @@ export const getWeatherHandler: WeatherServiceServer['getWeather'] = async (call
     const query = isHourly ? 'hourly' : 'daily';
     const variableList = variableKeys.map(k => varNames[k]).join(',');
 
-    const response = await axios.get('https://api.open-meteo.com/v1/forecast', {
+    const request = {
+      url: 'https://api.open-meteo.com/v1/forecast',
       params: {
         latitude: lat,
         longitude: lon,
@@ -58,7 +59,11 @@ export const getWeatherHandler: WeatherServiceServer['getWeather'] = async (call
         end_date: endTime.split('T')[0],
         timezone: 'UTC'
       }
-    });
+    };
+
+    console.log("Fetching from:", axios.getUri(request));
+
+    const response = await axios.get(request.url, { params: request.params });
 
     const timeSeries = response.data[query];
     const result: Array<{ timestamp: string; value: number; variable: string }> = [];

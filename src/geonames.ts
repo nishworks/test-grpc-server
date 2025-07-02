@@ -4,7 +4,8 @@ const GEONAMES_USERNAME = 'nishgarg14'; // replace with your actual GeoNames use
 
 export async function getCityCoordinates(countryCode: string, stateName: string, cityName: string) {
   try {
-    const res = await axios.get('http://api.geonames.org/searchJSON', {
+    const request = {
+      url: 'http://api.geonames.org/searchJSON',
       params: {
         country: countryCode,
         adminName1: stateName,
@@ -13,7 +14,11 @@ export async function getCityCoordinates(countryCode: string, stateName: string,
         maxRows: 1,
         username: GEONAMES_USERNAME
       }
-    });
+    };
+
+    console.log("Fetching from:", axios.getUri(request));
+
+    const res = await axios.get(request.url, { params: request.params });
 
     if (!res.data.geonames || res.data.geonames.length === 0) {
       throw new Error(`City ${cityName} not found in ${stateName}, ${countryCode}`);
